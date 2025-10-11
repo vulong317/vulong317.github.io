@@ -815,14 +815,14 @@ Section D. Engagement Results and Monitoring (45%)/SU6: Communication/6.3 Commun
     function parseData(data) {
         const lines = data.trim().split('\n').filter(Boolean);
         const root = {
-            name: 'Internal Audit', id: 'node-root', children: {}, isExpanded: true,
+            name: 'CIA3 -- Internal Audit Function', id: 'node-root', children: {}, isExpanded: true,
             depth: 0, x: 0, y: 0, parentId: null
         };
         nodeMap[root.id] = root;
         lines.forEach(line => {
             const parts = line.split('/').map(p => p.trim());
             let current = root;
-            let pathSoFar = 'Internal Audit';
+            let pathSoFar = 'CIA3 -- Internal Audit Function';
             parts.forEach((part, i) => {
                 pathSoFar += `/${part}`;
                 const nodeId = `node-${pathSoFar.replace(/[^a-zA-Z0-9]/g, '')}`;
