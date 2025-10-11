@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Right-Sided Mind Map - Single Path Expansion</title>
+    <title>CIA3 INTERNAL AUDIT FUNCTION</title>
     <style>
         /* --- Cài đặt Chung --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,13 +19,62 @@
 
         /* --- Phần Header --- */
         .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 15px;
+            display: flex;
+            /* THAY ĐỔI QUAN TRỌNG: Xếp các mục theo chiều dọc (trên-dưới) */
+            flex-direction: column; 
+            justify-content: center; /* Căn giữa */
+            align-items: center; /* Căn giữa */
             flex-shrink: 0;
+            padding: 20px 15px; /* Tăng padding một chút cho thoáng */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
         }
-        .header h1 { font-size: 2em; }
-        .header p { opacity: 0.9; }
+        
+        .header h1 {
+            display: block; 
+            font-size: 1.5em; /* Kích thước tiêu đề */
+            margin-bottom: 15px; /* Khoảng cách với nút bên dưới */
+            text-align: center;
+        }
+       
+        /* Ẩn thẻ p không cần thiết đi */
+        .header p {
+           display: none;
+        }
+
+        /* --- Style cho nút CTA --- */
+        .call-to-action-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            /* THAY ĐỔI: Giảm padding để thu nhỏ nút */
+            padding: 5px 12px; 
+            background-color: #FF9800;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            /* THAY ĐỔI: Giảm cỡ chữ */
+            font-size: 0.75em; 
+            /* THAY ĐỔI: Giảm độ bo tròn cho cân đối hơn */
+            border-radius: 6px; 
+            /* THAY ĐỔI: Giảm hiệu ứng bóng đổ */
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            /* THAY ĐỔI: Giảm độ dày viền */
+            border: 1px solid #e68900; 
+        }
+
+        .call-to-action-button:hover {
+            background-color: #e68900;
+            /* THAY ĐỔI: Giảm hiệu ứng bóng đổ khi hover */
+            box-shadow: 0 3px 10px rgba(255, 152, 0, 0.5); 
+            /* THAY ĐỔI: Giảm hiệu ứng nhấc lên */
+            transform: translateY(-1px); 
+        }
+
 
         /* --- Container chính cho Mindmap SVG --- */
         #mindmap-container {
@@ -107,13 +156,15 @@
 </head>
 <body>
     <div class="header">
-        <h1>Internal Audit Function</h1>
-        <p>Right-Sided Hierarchical Layout</p>
+    	<h1>CIA3 -- Internal Audit Function</h1>
+        <a href="https://www.longnguyencia.com/p/gioi-thieu-lop-hoc.html" target="_blank" class="call-to-action-button">
+            Tìm hiểu về Khóa học CIA ONLINE
+        </a>
     </div>
 
     <div id="mindmap-container">
         <svg id="mindmap-svg"></svg>
-        <div class="info">Single Path Expansion</div>
+        <div class="info">@LongNguyenCIA</div>
     </div>
 
     <script>
