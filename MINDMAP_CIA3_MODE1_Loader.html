@@ -3,7 +3,7 @@
 <script>
 (async()=>{
   try{
-    const r = await fetch('/MINDMAP_CIA3_MODE 1.b64', {cache: 'no-store'});
+    const r = await fetch('/MINDMAP_CIA3_MODE1.b64', {cache: 'no-store'});
     if(!r.ok) throw new Error('Không tải được nội dung');
     const b64 = (await r.text()).trim();
     const html = atob(b64);
