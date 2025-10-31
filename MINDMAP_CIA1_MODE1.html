@@ -1,4 +1,191 @@
-<!DOCTYPE html><html lang="vi"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>@LongNguyenCIA1</title>    <style>        /* --- Cài đặt Chung --- */        * { margin: 0; padding: 0; box-sizing: border-box; }        body, html { height: 100%; width: 100%; overflow: hidden; }        body {            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);            padding: 15px;            display: flex;            flex-direction: column;        }        /* --- Phần Header --- */        .header {            display: flex;            /* THAY ĐỔI QUAN TRỌNG: Xếp các mục theo chiều dọc (trên-dưới) */            flex-direction: column;             justify-content: center; /* Căn giữa */            align-items: center; /* Căn giữa */            flex-shrink: 0;            padding: 20px 15px; /* Tăng padding một chút cho thoáng */            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);            color: white;         }                .header h1 {            display: block;             font-size: 1.5em; /* Kích thước tiêu đề */            margin-bottom: 15px; /* Khoảng cách với nút bên dưới */            text-align: center;        }               /* Ẩn thẻ p không cần thiết đi */        .header p {           display: none;        }        /* --- Style cho nút CTA --- */        .call-to-action-button {            display: inline-flex;            align-items: center;            justify-content: center;            /* THAY ĐỔI: Giảm padding để thu nhỏ nút */            padding: 5px 12px;             background-color: #FF9800;            color: white;            text-decoration: none;            font-weight: bold;            /* THAY ĐỔI: Giảm cỡ chữ */            font-size: 0.75em;             /* THAY ĐỔI: Giảm độ bo tròn cho cân đối hơn */            border-radius: 6px;             /* THAY ĐỔI: Giảm hiệu ứng bóng đổ */            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);            transition: all 0.3s ease;            cursor: pointer;            text-transform: uppercase;            letter-spacing: 0.5px;            /* THAY ĐỔI: Giảm độ dày viền */            border: 1px solid #e68900;         }        .call-to-action-button:hover {            background-color: #e68900;            /* THAY ĐỔI: Giảm hiệu ứng bóng đổ khi hover */            box-shadow: 0 3px 10px rgba(255, 152, 0, 0.5);             /* THAY ĐỔI: Giảm hiệu ứng nhấc lên */            transform: translateY(-1px);         }        /* --- Container chính cho Mindmap SVG --- */        #mindmap-container {            flex-grow: 1;            background: white;            border-radius: 15px;            box-shadow: 0 20px 60px rgba(0,0,0,0.3);            overflow: hidden;            cursor: grab;            position: relative;        }        #mindmap-container:active { cursor: grabbing; }        #mindmap-svg {            display: block;            width: 100%;            height: 100%;        }        /* --- Định dạng các Phần tử SVG --- */        .branch-line {            fill: none;            stroke-linecap: round;            transition: all 0.4s ease-in-out;        }        .node {            cursor: pointer;            transition: all 0.4s ease-in-out;        }        .node.is-leaf { cursor: default; }        .node:not(.is-leaf):hover .node-rect {            transform: scale(1.05);            filter: brightness(0.95);        }                .node-rect {            stroke-width: 1.5px;            rx: 25; ry: 25;            transition: all 0.4s ease-in-out;            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));        }                .node-foreign-object {            pointer-events: none;            user-select: none;            overflow: visible;        }        .node-text-wrapper {            display: flex;            justify-content: center;            align-items: center;            text-align: left;            height: 100%;            padding: 8px;            font-size: 13px;            line-height: 1.35;            font-weight: 500;            color: white;            word-wrap: break-word;        }        .node.central .node-rect { stroke-width: 3px; }        .node.central .node-text-wrapper { font-size: 18px; font-weight: bold; }                .hidden {            opacity: 0;            pointer-events: none;            transform: scale(0.5);        }        .info {            position: absolute; bottom: 10px; right: 15px; background: rgba(0,0,0,0.7);            color: white; padding: 8px 12px; border-radius: 5px; font-size: 12px; pointer-events: none;        }    </style></head><body>    <div class="header">        <h1>CIA1 -- INTERNAL AUDIT FUNDAMENTALS</h1>        <a href="https://www.longnguyencia.com/p/gioi-thieu-lop-hoc.html" target="_blank" class="call-to-action-button">            Tìm hiểu về Khóa học CIA ONLINE        </a>    </div>    <div id="mindmap-container">        <svg id="mindmap-svg"></svg>        <div class="info">@LongNguyenCIA | Lăn chuột để phóng to thu nhỏ, Click để chọn, Click giữ và kéo để di chuyển map</div>    </div>    <script>    /* --- PHẦN 1: DỮ LIỆU THÔ --- */    const rawData = `
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LongNguyenCIA1</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        .mindmap-wrapper {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        
+        .mindmap-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+        }
+        
+        .mindmap-header h1 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #FF9800;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.85em;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid #e68900;
+        }
+        
+        .cta-button:hover {
+            background-color: #e68900;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.5);
+        }
+        
+        .mindmap-container {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            min-height: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            touch-action: none;
+            margin-top: 10px;
+        }
+        
+        .mindmap-svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .branch-line {
+            fill: none;
+            stroke-linecap: round;
+            transition: opacity 0.3s ease;
+        }
+        
+        .node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .node.is-leaf { cursor: default; }
+        
+        .node:not(.is-leaf):active .node-rect,
+        .node:not(.is-leaf):hover .node-rect {
+            transform: scale(1.05);
+            filter: brightness(0.95);
+        }
+        
+        .node-rect {
+            stroke-width: 1.5px;
+            rx: 20;
+            ry: 20;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.15));
+        }
+        
+        .node.central .node-rect { 
+            stroke-width: 3px; 
+        }
+        
+        .node-text-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+            padding: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+            font-weight: 500;
+            color: white;
+            word-wrap: break-word;
+        }
+        
+        .node.central .node-text-wrapper { 
+            font-size: 16px;
+            font-weight: bold; 
+        }
+        
+        .info-overlay {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.75);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            pointer-events: none;
+            max-width: 200px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .mindmap-header h1 {
+                font-size: 1.1em;
+            }
+            
+            .cta-button {
+                font-size: 0.75em;
+                padding: 6px 12px;
+            }
+            
+            .mindmap-container {
+                height: 60vh;
+                min-height: 350px;
+            }
+            
+            .info-overlay {
+                font-size: 9px;
+                padding: 6px 8px;
+                max-width: 150px;
+            }
+            
+            .node-text-wrapper {
+                font-size: 11px;
+                padding: 8px;
+            }
+            
+            .node.central .node-text-wrapper {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mindmap-wrapper">
+        <div class="mindmap-header">
+            <h1>INTERNAL AUDIT FUNDAMENTALS</h1>
+            <a href="https://www.longnguyencia.com/p/gioi-thieu-lop-hoc.html" target="_blank" class="cta-button">
+                Tìm hiểu về Khóa học CIA ONLINE
+            </a>
+        </div>
+        
+        <div class="mindmap-container" id="mindmap-container">
+            <svg class="mindmap-svg" id="mindmap-svg"></svg>
+            <div class="info-overlay">
+                @LongNguyenCIA<br>
+                Chạm & kéo để di chuyển<br>
+                Pinch để phóng to/thu nhỏ
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+        
+        const rawData = `
 SECTION A. FOUNDATIONS OF INTERNAL AUDITING (35%)/SU1 FOUNDATIONS OF INTERNAL AUDITING/1.0 STUDY UNIT ONE FOUNDATIONS OF INTERNAL AUDITING -- LEARNING OBJECTIVES / 1.0 STUDY UNIT ONE FOUNDATIONS OF INTERNAL AUDITING -- LEARNING OBJECTIVES / Internal Audit Foundations Learning Objectives/● Audit Purpose ● Mandate Roles ● Audit Charter ● Independence Issues ● Risk Management
 SECTION A. FOUNDATIONS OF INTERNAL AUDITING (35%)/SU1 FOUNDATIONS OF INTERNAL AUDITING/1.1 PURPOSE OF INTERNAL AUDITING / 1.1 PURPOSE OF INTERNAL AUDITING / Internal Auditing/● Assurance & Advice ● Achieve Goals
 SECTION A. FOUNDATIONS OF INTERNAL AUDITING (35%)/SU1 FOUNDATIONS OF INTERNAL AUDITING/1.1 PURPOSE OF INTERNAL AUDITING / 1.1 PURPOSE OF INTERNAL AUDITING / Internal Auditing Purpose Statement/● Understand value ● Articulate value
@@ -1057,4 +1244,373 @@ SECTION D. FRAUD RISKS (15%)/SU10 FRAUD RISKS/10.3 FRAUD -- INVESTIGATION / 10.3
 SECTION D. FRAUD RISKS (15%)/SU10 FRAUD RISKS/10.3 FRAUD -- INVESTIGATION / 10.3.6 COMMUNICATION OF FRAUD INCIDENTS / Fraud Communication External Parties/● Board Decides ● Notify Agencies
 SECTION D. FRAUD RISKS (15%)/SU10 FRAUD RISKS/10.3 FRAUD -- INVESTIGATION / 10.3.6 COMMUNICATION OF FRAUD INCIDENTS / Fraud Communication Integrity and Controls/● Reinforce Integrity ● Explain Controls
 SECTION D. FRAUD RISKS (15%)/SU10 FRAUD RISKS/10.3 FRAUD -- INVESTIGATION / 10.3.6 COMMUNICATION OF FRAUD INCIDENTS / Opinion on Fraud Related Controls/● Opinion request ● Opinion acceptable
-`;    /* --- PHẦN 2: THIẾT LẬP VÀ CÁC BIẾN TOÀN CỤC --- */    const nodeMap = {};    const svg = document.getElementById('mindmap-svg');    const container = document.getElementById('mindmap-container');    let zoom = 0.6; let panX = 0; let panY = 0;    let isPanning = false; let panStart = { x: 0, y: 0 };    let mainGroup;    const COLORS = ['#5a67d8', '#9f7aea', '#38a169', '#ed8936', '#4299e1', '#e53e3e', '#38b2ac', '#d53f8c'];    /* --- PHẦN 3: CÁC HÀM TIỆN ÍCH VÀ XỬ LÝ DỮ LIỆU --- */    function precalculateSizes(node) {        const fontSize = (node.depth === 0) ? 18 : Math.max(14 - node.depth, 10);        const fontWeight = (node.depth === 0) ? 'bold' : '500';        const maxWidth = 350 - node.depth * 25;        const temp = document.createElement('div');        Object.assign(temp.style, {            position: 'absolute', visibility: 'hidden', whiteSpace: 'normal',            wordWrap: 'break-word', fontSize: `${fontSize}px`, fontWeight: fontWeight,            lineHeight: '1.35', padding: '8px', width: `${maxWidth}px`,        });        temp.textContent = node.name;        document.body.appendChild(temp);        node.width = temp.clientWidth + 16;        node.height = temp.clientHeight + 16;        document.body.removeChild(temp);        Object.values(node.children).forEach(precalculateSizes);    }    function parseData(data) {        const lines = data.trim().split('\n').filter(Boolean);        const root = {            name: 'CIA1-- INTERNAL AUDIT FUNDAMENTALS', id: 'node-root', children: {}, isExpanded: true,            depth: 0, x: 0, y: 0, parentId: null        };        nodeMap[root.id] = root;        lines.forEach(line => {            const parts = line.split('/').map(p => p.trim());            let current = root;            let pathSoFar = 'CIA1 -- INTERNAL AUDIT FUNDAMENTALS';            parts.forEach((part, i) => {                pathSoFar += `/${part}`;                const nodeId = `node-${pathSoFar.replace(/[^a-zA-Z0-9]/g, '')}`;                if (!current.children[nodeId]) {                    const nodeData = {                        name: part, id: nodeId, children: {}, isExpanded: false,                        depth: i + 1, parentId: current.id, x: 0, y: 0                    };                    current.children[nodeId] = nodeData;                    nodeMap[nodeId] = nodeData;                }                current = current.children[nodeId];            });        });        precalculateSizes(root);        return root;    }    /* --- PHẦN 4: THUẬT TOÁN LAYOUT VÀ VẼ --- */        function calculateLayout(rootNode) {        const HORIZONTAL_SPACING = 400;         const VERTICAL_SPACING = 20;        function calculateSubtreeHeight(node) {            if (!node.isExpanded || Object.keys(node.children).length === 0) {                node.subtreeHeight = node.height;                return;            }            let totalHeight = 0;            const children = Object.values(node.children);            children.forEach(child => {                calculateSubtreeHeight(child);                totalHeight += child.subtreeHeight;            });            totalHeight += (children.length - 1) * VERTICAL_SPACING;            node.subtreeHeight = Math.max(node.height, totalHeight);        }        function assignPositions(node, depth, yPos) {            node.x = depth * HORIZONTAL_SPACING;            node.y = yPos;            if (node.isExpanded && Object.keys(node.children).length > 0) {                const children = Object.values(node.children);                const childrenBlockHeight = (children.reduce((sum, child) => sum + child.subtreeHeight, 0)) + (children.length - 1) * VERTICAL_SPACING;                                let currentY = yPos - (childrenBlockHeight / 2);                children.forEach(child => {                    const childYCenter = currentY + (child.subtreeHeight / 2);                    assignPositions(child, depth + 1, childYCenter);                    currentY += child.subtreeHeight + VERTICAL_SPACING;                });            }        }        calculateSubtreeHeight(rootNode);        assignPositions(rootNode, 0, 0);    }    function drawMindmap(data) {        svg.innerHTML = '';        mainGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");        mainGroup.id = 'pannable-zoomable-group';                const linksGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");        const nodesGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");                calculateLayout(data);        function drawRecursive(node, colorIndex) {            const parent = nodeMap[node.parentId];            if (parent) {                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");                                const startX = parent.x + parent.width / 2;                const startY = parent.y;                const endX = node.x - node.width / 2;                const endY = node.y;                const midX = (startX + endX) / 2;                                const d = `M ${startX} ${startY} C ${midX} ${startY}, ${midX} ${endY}, ${endX} ${endY}`;                                path.setAttribute('d', d);                path.setAttribute('stroke', COLORS[colorIndex % COLORS.length]);                path.setAttribute('stroke-width', Math.max(8 - node.depth * 1.5, 1.5));                path.setAttribute('opacity', 0.6);                path.classList.add('branch-line');                linksGroup.appendChild(path);            }            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");            g.setAttribute('id', node.id);            g.classList.add('node');            if (node.depth === 0) g.classList.add('central');            if (Object.keys(node.children).length === 0) g.classList.add('is-leaf');            g.setAttribute('transform', `translate(${node.x - node.width / 2}, ${node.y - node.height / 2})`);            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");            rect.setAttribute('width', node.width);            rect.setAttribute('height', node.height);            rect.setAttribute('fill', COLORS[colorIndex % COLORS.length]);            rect.setAttribute('stroke', `rgba(0,0,0,0.2)`);            rect.classList.add('node-rect');                        const foreignObject = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");            foreignObject.setAttribute('width', node.width);            foreignObject.setAttribute('height', node.height);            const fontSize = (node.depth === 0) ? 18 : Math.max(14 - node.depth, 10);            foreignObject.innerHTML = `<div class="node-text-wrapper" style="font-size: ${fontSize}px;">${node.name}</div>`;            foreignObject.classList.add('node-foreign-object');                        g.appendChild(rect);            g.appendChild(foreignObject);            nodesGroup.appendChild(g);            if (node.isExpanded) {                Object.values(node.children).forEach((child, i) => {                    const childColorIndex = (node.depth === 0) ? i : colorIndex;                    drawRecursive(child, childColorIndex);                });            }        }                drawRecursive(data, 0);        mainGroup.appendChild(linksGroup);        mainGroup.appendChild(nodesGroup);        svg.appendChild(mainGroup);        applyTransform();    }    /* --- PHẦN 5: XỬ LÝ TƯƠNG TÁC (PAN, ZOOM, CLICK) --- */    function applyTransform() {        if (mainGroup) mainGroup.setAttribute('transform', `translate(${panX}, ${panY}) scale(${zoom})`);    }    function collapseAllDescendants(node) {        Object.values(node.children).forEach(child => {            child.isExpanded = false;            collapseAllDescendants(child);        });    }    /**     * **THAY ĐỔI:** Cập nhật logic để chỉ cho phép một đường dẫn được mở rộng tại một thời điểm.     * Khi mở một node mới, tất cả các node khác sẽ bị đóng lại.     */    function toggleNode(nodeId) {        const node = nodeMap[nodeId];        if (!node || Object.keys(node.children).length === 0) return;        const isCurrentlyExpanded = node.isExpanded;        /* Nếu hành động là MỞ RỘNG node này */        if (!isCurrentlyExpanded) {            /* 1. Thu gọn tất cả các node khác trước. */            /* (Không thu gọn node gốc, vì nó luôn mở) */            for (const key in nodeMap) {                if (nodeMap[key].depth > 0) {                   nodeMap[key].isExpanded = false;                }            }            /* 2. Mở rộng node được nhấp vào. */            node.isExpanded = true;            /* 3. Đảm bảo tất cả các node cha của nó cũng được mở rộng để hiển thị đường dẫn. */            let current = nodeMap[node.parentId];            while(current) {                current.isExpanded = true;                current = nodeMap[current.parentId];            }        } else { /* Nếu hành động là THU GỌN node này */            node.isExpanded = false;            /* Thu gọn luôn tất cả các node con của nó. */            collapseAllDescendants(node);        }        drawMindmap(nodeMap['node-root']);        addEventListeners();    }        function addEventListeners() {        svg.querySelectorAll('.node:not(.is-leaf)').forEach(nodeEl => {            nodeEl.addEventListener('click', e => {                e.stopPropagation();                toggleNode(nodeEl.getAttribute('id'));            });        });    }    /* --- PHẦN 6: ĐIỂM KHỞI ĐỘNG VÀ CÁC SỰ KIỆN --- */    container.addEventListener('mousedown', e => {        isPanning = true;        panStart = { x: e.clientX - panX, y: e.clientY - panY };    });    container.addEventListener('mousemove', e => {        if (!isPanning) return;        panX = e.clientX - panStart.x;        panY = e.clientY - panStart.y;        applyTransform();    });    const endPan = () => isPanning = false;    container.addEventListener('mouseup', endPan);    container.addEventListener('mouseleave', endPan);    container.addEventListener('wheel', e => {        e.preventDefault();        const zoomIntensity = 0.1;        const wheel = e.deltaY < 0 ? 1 : -1;        const newZoom = Math.max(0.1, zoom + wheel * zoomIntensity * zoom);        const rect = container.getBoundingClientRect();        const mouseX = e.clientX - rect.left;        const mouseY = e.clientY - rect.top;        panX = mouseX - (mouseX - panX) * (newZoom / zoom);        panY = mouseY - (mouseY - panY) * (newZoom / zoom);        zoom = newZoom;        applyTransform();    });    window.addEventListener('DOMContentLoaded', () => {        try {            const data = parseData(rawData);            const rect = container.getBoundingClientRect();            panX = 150;             panY = rect.height / 2;            drawMindmap(data);            addEventListeners();        } catch (error) {            console.error('Error:', error);            container.innerHTML = `<p style="color: red; text-align: center; padding: 20px;">Error loading mind map: ${error.message}</p>`;        }    });    </script></body></html>
+`;
+        
+        const nodeMap = {};
+        const svg = document.getElementById('mindmap-svg');
+        const container = document.getElementById('mindmap-container');
+        let zoom = 0.5;
+        let panX = 0;
+        let panY = 0;
+        let mainGroup;
+        
+        const COLORS = ['#5a67d8', '#9f7aea', '#38a169', '#ed8936', '#4299e1', '#e53e3e', '#38b2ac', '#d53f8c'];
+        
+        // Touch handling variables
+        let lastTouchDistance = 0;
+        let lastTouchCenter = { x: 0, y: 0 };
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        
+        function precalculateSizes(node) {
+            const fontSize = (node.depth === 0) ? 16 : Math.max(13 - node.depth, 10);
+            const fontWeight = (node.depth === 0) ? 'bold' : '500';
+            const maxWidth = 300 - node.depth * 20;
+            
+            const temp = document.createElement('div');
+            Object.assign(temp.style, {
+                position: 'absolute',
+                visibility: 'hidden',
+                whiteSpace: 'normal',
+                wordWrap: 'break-word',
+                fontSize: fontSize + 'px',
+                fontWeight: fontWeight,
+                lineHeight: '1.4',
+                padding: '10px',
+                width: maxWidth + 'px',
+            });
+            temp.textContent = node.name;
+            document.body.appendChild(temp);
+            node.width = temp.clientWidth + 20;
+            node.height = temp.clientHeight + 20;
+            document.body.removeChild(temp);
+            
+            Object.values(node.children).forEach(precalculateSizes);
+        }
+        
+        function parseData(data) {
+            const lines = data.trim().split('\n').filter(Boolean);
+            const root = {
+                name: 'GLOBAL INTERNAL AUDIT STANDARDS',
+                id: 'node-root',
+                children: {},
+                isExpanded: true,
+                depth: 0,
+                x: 0,
+                y: 0,
+                parentId: null
+            };
+            nodeMap[root.id] = root;
+            
+            lines.forEach(line => {
+                const parts = line.split('/').map(p => p.trim());
+                let current = root;
+                let pathSoFar = 'GIAS';
+                
+                parts.forEach((part, i) => {
+                    pathSoFar += '/' + part;
+                    const nodeId = 'node-' + pathSoFar.replace(/[^a-zA-Z0-9]/g, '');
+                    
+                    if (!current.children[nodeId]) {
+                        const nodeData = {
+                            name: part,
+                            id: nodeId,
+                            children: {},
+                            isExpanded: false,
+                            depth: i + 1,
+                            parentId: current.id,
+                            x: 0,
+                            y: 0
+                        };
+                        current.children[nodeId] = nodeData;
+                        nodeMap[nodeId] = nodeData;
+                    }
+                    current = current.children[nodeId];
+                });
+            });
+            
+            precalculateSizes(root);
+            return root;
+        }
+        
+        function calculateLayout(rootNode) {
+            const HORIZONTAL_SPACING = 350;
+            const VERTICAL_SPACING = 15;
+            
+            function calculateSubtreeHeight(node) {
+                if (!node.isExpanded || Object.keys(node.children).length === 0) {
+                    node.subtreeHeight = node.height;
+                    return;
+                }
+                
+                let totalHeight = 0;
+                const children = Object.values(node.children);
+                children.forEach(child => {
+                    calculateSubtreeHeight(child);
+                    totalHeight += child.subtreeHeight;
+                });
+                totalHeight += (children.length - 1) * VERTICAL_SPACING;
+                node.subtreeHeight = Math.max(node.height, totalHeight);
+            }
+            
+            function assignPositions(node, depth, yPos) {
+                node.x = depth * HORIZONTAL_SPACING;
+                node.y = yPos;
+                
+                if (node.isExpanded && Object.keys(node.children).length > 0) {
+                    const children = Object.values(node.children);
+                    const childrenBlockHeight = children.reduce((sum, child) => sum + child.subtreeHeight, 0) + (children.length - 1) * VERTICAL_SPACING;
+                    
+                    let currentY = yPos - (childrenBlockHeight / 2);
+                    children.forEach(child => {
+                        const childYCenter = currentY + (child.subtreeHeight / 2);
+                        assignPositions(child, depth + 1, childYCenter);
+                        currentY += child.subtreeHeight + VERTICAL_SPACING;
+                    });
+                }
+            }
+            
+            calculateSubtreeHeight(rootNode);
+            assignPositions(rootNode, 0, 0);
+        }
+        
+        function drawMindmap(data) {
+            svg.innerHTML = '';
+            mainGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            mainGroup.id = 'main-group';
+            
+            const linksGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            const nodesGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            
+            calculateLayout(data);
+            
+            function drawRecursive(node, colorIndex) {
+                const parent = nodeMap[node.parentId];
+                if (parent) {
+                    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    const startX = parent.x + parent.width / 2;
+                    const startY = parent.y;
+                    const endX = node.x - node.width / 2;
+                    const endY = node.y;
+                    const midX = (startX + endX) / 2;
+                    const d = 'M ' + startX + ' ' + startY + ' C ' + midX + ' ' + startY + ', ' + midX + ' ' + endY + ', ' + endX + ' ' + endY;
+                    
+                    path.setAttribute('d', d);
+                    path.setAttribute('stroke', COLORS[colorIndex % COLORS.length]);
+                    path.setAttribute('stroke-width', Math.max(6 - node.depth * 1.2, 1.5));
+                    path.setAttribute('opacity', 0.6);
+                    path.classList.add('branch-line');
+                    linksGroup.appendChild(path);
+                }
+                
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.setAttribute('id', node.id);
+                g.classList.add('node');
+                if (node.depth === 0) g.classList.add('central');
+                if (Object.keys(node.children).length === 0) g.classList.add('is-leaf');
+                g.setAttribute('transform', 'translate(' + (node.x - node.width / 2) + ', ' + (node.y - node.height / 2) + ')');
+                
+                const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rect.setAttribute('width', node.width);
+                rect.setAttribute('height', node.height);
+                rect.setAttribute('fill', COLORS[colorIndex % COLORS.length]);
+                rect.setAttribute('stroke', 'rgba(0,0,0,0.2)');
+                rect.classList.add('node-rect');
+                
+                const foreignObject = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+                foreignObject.setAttribute('width', node.width);
+                foreignObject.setAttribute('height', node.height);
+                const fontSize = (node.depth === 0) ? 16 : Math.max(13 - node.depth, 10);
+                foreignObject.innerHTML = '<div class="node-text-wrapper" style="font-size: ' + fontSize + 'px;">' + node.name + '</div>';
+                
+                g.appendChild(rect);
+                g.appendChild(foreignObject);
+                nodesGroup.appendChild(g);
+                
+                if (node.isExpanded) {
+                    Object.values(node.children).forEach(function(child, i) {
+                        const childColorIndex = (node.depth === 0) ? i : colorIndex;
+                        drawRecursive(child, childColorIndex);
+                    });
+                }
+            }
+            
+            drawRecursive(data, 0);
+            mainGroup.appendChild(linksGroup);
+            mainGroup.appendChild(nodesGroup);
+            svg.appendChild(mainGroup);
+            applyTransform();
+        }
+        
+        function applyTransform() {
+            if (mainGroup) {
+                mainGroup.setAttribute('transform', 'translate(' + panX + ', ' + panY + ') scale(' + zoom + ')');
+            }
+        }
+        
+        function collapseAllDescendants(node) {
+            Object.values(node.children).forEach(function(child) {
+                child.isExpanded = false;
+                collapseAllDescendants(child);
+            });
+        }
+        
+        function toggleNode(nodeId) {
+            const node = nodeMap[nodeId];
+            if (!node || Object.keys(node.children).length === 0) return;
+            
+            const isCurrentlyExpanded = node.isExpanded;
+            
+            if (!isCurrentlyExpanded) {
+                for (const key in nodeMap) {
+                    if (nodeMap[key].depth > 0) {
+                        nodeMap[key].isExpanded = false;
+                    }
+                }
+                
+                node.isExpanded = true;
+                let current = nodeMap[node.parentId];
+                while(current) {
+                    current.isExpanded = true;
+                    current = nodeMap[current.parentId];
+                }
+            } else {
+                node.isExpanded = false;
+                collapseAllDescendants(node);
+            }
+            
+            drawMindmap(nodeMap['node-root']);
+            addEventListeners();
+        }
+        
+        function addEventListeners() {
+            svg.querySelectorAll('.node:not(.is-leaf)').forEach(function(nodeEl) {
+                nodeEl.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleNode(nodeEl.getAttribute('id'));
+                });
+            });
+        }
+        
+        // Touch event handlers
+        function getTouchDistance(touches) {
+            const dx = touches[0].clientX - touches[1].clientX;
+            const dy = touches[0].clientY - touches[1].clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+        
+        function getTouchCenter(touches) {
+            return {
+                x: (touches[0].clientX + touches[1].clientX) / 2,
+                y: (touches[0].clientY + touches[1].clientY) / 2
+            };
+        }
+        
+        container.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                lastTouchDistance = getTouchDistance(e.touches);
+                lastTouchCenter = getTouchCenter(e.touches);
+            } else if (e.touches.length === 1) {
+                isDragging = true;
+                dragStart = {
+                    x: e.touches[0].clientX - panX,
+                    y: e.touches[0].clientY - panY
+                };
+            }
+        }, { passive: false });
+        
+        container.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                const currentDistance = getTouchDistance(e.touches);
+                const currentCenter = getTouchCenter(e.touches);
+                
+                const rect = container.getBoundingClientRect();
+                const centerX = currentCenter.x - rect.left;
+                const centerY = currentCenter.y - rect.top;
+                
+                const newZoom = Math.max(0.1, Math.min(3, zoom * (currentDistance / lastTouchDistance)));
+                
+                panX = centerX - (centerX - panX) * (newZoom / zoom);
+                panY = centerY - (centerY - panY) * (newZoom / zoom);
+                
+                zoom = newZoom;
+                lastTouchDistance = currentDistance;
+                lastTouchCenter = currentCenter;
+                
+                applyTransform();
+            } else if (e.touches.length === 1 && isDragging) {
+                e.preventDefault();
+                panX = e.touches[0].clientX - dragStart.x;
+                panY = e.touches[0].clientY - dragStart.y;
+                applyTransform();
+            }
+        }, { passive: false });
+        
+        container.addEventListener('touchend', function(e) {
+            isDragging = false;
+        });
+        
+        // Mouse events for desktop
+        container.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            dragStart = { x: e.clientX - panX, y: e.clientY - panY };
+        });
+        
+        container.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            panX = e.clientX - dragStart.x;
+            panY = e.clientY - dragStart.y;
+            applyTransform();
+        });
+        
+        container.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+        
+        container.addEventListener('mouseleave', function() {
+            isDragging = false;
+        });
+        
+        container.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            const zoomIntensity = 0.1;
+            const wheel = e.deltaY < 0 ? 1 : -1;
+            const newZoom = Math.max(0.1, Math.min(3, zoom + wheel * zoomIntensity * zoom));
+            
+            const rect = container.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            panX = mouseX - (mouseX - panX) * (newZoom / zoom);
+            panY = mouseY - (mouseY - panY) * (newZoom / zoom);
+            zoom = newZoom;
+            
+            applyTransform();
+        }, { passive: false });
+        
+        // Initialize
+        function init() {
+            try {
+                const data = parseData(rawData);
+                const rect = container.getBoundingClientRect();
+                panX = 100;
+                panY = rect.height / 2;
+                drawMindmap(data);
+                addEventListeners();
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = '<p style="color: red; text-align: center; padding: 20px;">Error loading mind map: ' + error.message + '</p>';
+            }
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+</body>
+</html>
